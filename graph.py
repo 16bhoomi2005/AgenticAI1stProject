@@ -9,7 +9,7 @@ from langgraph.prebuilt import ToolNode
 from langchain_groq import ChatGroq
 from langchain_tavily import TavilySearch
 from langchain_core.prompts import ChatPromptTemplate
-
+from langgraph.checkpoint.memory import MemorySaver
 load_dotenv()
 
 
@@ -121,6 +121,8 @@ def create_graph():
     g.add_edge("chat", END) 
     
     g.add_edge("answer", END)
+    memory = MemorySaver() # 1. Initialize Memory
+    graph = g.compile(checkpointer=memory) # 2. Add checkpointer
 
-    return g.compile()
+    return graph
 graph=create_graph()
